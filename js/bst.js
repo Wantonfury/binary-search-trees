@@ -70,12 +70,60 @@ class Tree {
         return Math.max(left, right) + 1;
     }
     
-    insertRec(value, node) {
+    insertRec(data, node) {
+        if (!node) {
+            node = new Node(data);
+            return node;
+        }
         
+        if (data < node.data) node.left = this.insertRec(data, node.left);
+        else if (data > node.data) node.right = this.insertRec(data, node.right);
+        
+        return node;
     }
     
-    insert(value) {
-        this.insertRec(value, this.#root);
+    insert(data) {
+        this.#root = this.insertRec(data, this.#root);
+    }
+    
+    minData(node) {
+        let min = node.data;
+        while (node.left) {
+            min = node.left.data;
+            node = node.left;
+        }
+        return min;
+    }
+    
+    deleteRec(data, node) {
+        if (!node) return null;
+        
+        if (data < node.data) node.left = this.deleteRec(data, node.left);
+        else if (data > node.data) node.right = this.deleteRec(data, node.right);
+        else {
+            if (!node.left) return node.right;
+            else if (!node.right) return node.left;
+            
+            node.data = this.minData(node.right);
+            node.right = this.deleteRec(node.data, node.right);
+        }
+        
+        return node;
+    }
+    
+    delete(data) {
+        this.#root = this.deleteRec(data, this.#root);
+    }
+    
+    findRec(data, node) {
+        if (!node || node.data === data) return node;
+        
+        if (data < node.data)  return this.findRec(data, node.left);
+        return this.findRec(data, node.right);
+    }
+    
+    find(data) {
+        return this.findRec(data, this.#root);
     }
 }
 
