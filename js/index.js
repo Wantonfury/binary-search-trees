@@ -10,3 +10,24 @@ tree.print();
 tree.delete(4);
 tree.print();
 console.log(tree.find(6));
+tree.levelOrder((node) => {
+    console.log(node.data);
+});
+console.log('============================');
+tree.inorder((node) => {
+    console.log(node.data);
+});
+console.log('============================');
+tree.preorder((node) => {
+    console.log(node.data);
+});
+console.log(tree.isBalanced()); // true
+tree.insert(-1);
+tree.insert(-2);
+console.log(tree.isBalanced()); // false
+
+tree.print();
+tree.rebalance();
+console.log('=================');
+tree.print();
+console.log(tree.isBalanced()); // true

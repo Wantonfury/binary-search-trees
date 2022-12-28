@@ -125,6 +125,70 @@ class Tree {
     find(data) {
         return this.findRec(data, this.#root);
     }
+    
+    levelOrder(cb) {
+        let nodes = [this.#root];
+        
+        while (nodes.length > 0) {
+            let len = nodes.length;
+            nodes.forEach(node => {
+                if (node.left) nodes.push(node.left);
+                if (node.right) nodes.push(node.right);
+                
+                cb(node);
+            });
+            
+            nodes.splice(0, len);
+        }
+    }
+    
+    inorderRec(node, cb) {
+        if (node.left) this.inorderRec(node.left, cb);
+        cb(node);
+        if (node.right) this.inorderRec(node.right, cb);
+    }
+    
+    preorderRec(node, cb) {
+        cb(node);
+        if (node.left) this.preorderRec(node.left, cb);
+        if (node.right) this.preorderRec(node.right, cb);
+    }
+    
+    postorderRec(node, cb) {
+        if (node.left) this.preorderRec(node.left, cb);
+        if (node.right) this.preorderRec(node.right, cb);
+        cb(node);
+    }
+    
+    inorder(cb) {
+        this.inorderRec(this.#root, cb);
+    }
+    
+    preorder(cb) {
+        this.preorderRec(this.#root, cb);
+    }
+    
+    postorder(cb) {
+        this.postorderRec(this.#root, cb);
+    }
+    
+    isBalanced(node = this.#root) {
+        if (!node) return false;
+        
+        if (Math.abs(this.getHeight(node.left) - this.getHeight(node.right))> 1) return false;
+        return true;
+    }
+    
+    rebalance() {
+        if (this.isBalanced()) return;
+        
+        let newTree = [];
+        this.preorderRec(this.#root, (node) => {
+            newTree.push(node.data);
+        });
+        
+        this.buildTree(newTree);
+    }
 }
 
 export default Tree;
